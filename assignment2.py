@@ -29,7 +29,6 @@ print(f"Train: {len(y_train)}, Val: {len(y_val)}, Test: {len(y_test)}")
 kf = StratifiedKFold(n_splits=5)
 clf = SVC(kernel='linear')
 
-# K-Fold Cross Validation
 fold_accuracies = []
 for train_idx, val_idx in kf.split(X_train, y_train):
     X_train_fold, X_val_fold = X_train[train_idx], X_train[val_idx]
@@ -43,7 +42,7 @@ for train_idx, val_idx in kf.split(X_train, y_train):
 print(f"Mean accuracy across folds: {np.mean(fold_accuracies)}")
 
 # Step 4: Use K-Means to reduce the dimensionality of the set
-pca = PCA(n_components=100)
+pca = PCA(n_components=50) # reducing to 50 dimensions
 X_pca = pca.fit_transform(X_train)
 
 # Test multiple K values for KMeans
@@ -76,9 +75,9 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_train)
 
 # Apply DBSCAN
-dbscan = DBSCAN(eps=0.5, min_samples=5)
+dbscan = DBSCAN(eps=0.6, min_samples=5)
 dbscan_labels = dbscan.fit_predict(X_scaled)
 
 # Count the number of clusters
-n_clusters = len(set(dbscan_labels)) - (1 if -1 in dbscan_labels else 0)
-print(f"Number of clusters found by DBSCAN: {n_clusters}")
+unique_labels = set(dbscan_labels)
+print(f"Number of clusters found by DBSCAN after PCA: {len(unique_labels)}")
